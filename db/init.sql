@@ -50,12 +50,12 @@ CREATE TABLE SCP (
     image VARCHAR(255),
     threat_level VARCHAR(50),
     nationality VARCHAR(100),
-    id_scp_classFK INT,
-    id_scp_classificationFK INT,
-    id_siteFK INT,
-    FOREIGN KEY (id_scp_classFK) REFERENCES SCPClass(id_scp_class),
-    FOREIGN KEY (id_scp_classificationFK) REFERENCES SCPClassification(id_scp_classification),
-    FOREIGN KEY (id_siteFK) REFERENCES Site(id_site)
+    id_scp_class INT,
+    id_scp_classification INT,
+    id_site INT,
+    FOREIGN KEY (id_scp_class) REFERENCES SCPClass(id_scp_class),
+    FOREIGN KEY (id_scp_classification) REFERENCES SCPClassification(id_scp_classification),
+    FOREIGN KEY (id_site) REFERENCES Site(id_site)
 );
 
 CREATE TABLE `User` (
@@ -64,8 +64,8 @@ CREATE TABLE `User` (
     last_name VARCHAR(100),
     user_name VARCHAR(100) UNIQUE,
     email VARCHAR(100) UNIQUE,
-    id_user_classFK INT,
-    FOREIGN KEY (id_user_classFK) REFERENCES UserClass(id_user_class)
+    id_user_class INT,
+    FOREIGN KEY (id_user_class) REFERENCES UserClass(id_user_class)
 );
 
 CREATE TABLE Incident (
@@ -73,23 +73,23 @@ CREATE TABLE Incident (
     title VARCHAR(255),
     date DATE,
     description TEXT,
-    id_scpFK INT,
-    FOREIGN KEY (id_scpFK) REFERENCES SCP(id_scp)
+    id_scp INT,
+    FOREIGN KEY (id_scp) REFERENCES SCP(id_scp)
 );
 
 CREATE TABLE Work (
-    id_siteFK INT,
-    id_userFK INT,
-    PRIMARY KEY (id_siteFK, id_userFK),
-    FOREIGN KEY (id_siteFK) REFERENCES Site(id_site),
-    FOREIGN KEY (id_userFK) REFERENCES `User`(id_user)
+    id_site INT,
+    id_user INT,
+    PRIMARY KEY (id_site, id_user),
+    FOREIGN KEY (id_site) REFERENCES Site(id_site),
+    FOREIGN KEY (id_user) REFERENCES `User`(id_user)
 );
 
 CREATE TABLE Access (
-    id_scpFK INT,
-    id_userFK INT,
+    id_scp INT,
+    id_user INT,
     date_access DATETIME,
-    PRIMARY KEY (id_scpFK, id_userFK, date_access),
-    FOREIGN KEY (id_scpFK) REFERENCES SCP(id_scp),
-    FOREIGN KEY (id_userFK) REFERENCES `User`(id_user)
+    PRIMARY KEY (id_scp, id_user, date_access),
+    FOREIGN KEY (id_scp) REFERENCES SCP(id_scp),
+    FOREIGN KEY (id_user) REFERENCES `User`(id_user)
 );
