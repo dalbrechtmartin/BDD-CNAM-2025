@@ -1,5 +1,9 @@
+-- Encodage des caractères
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+
 -- Créer la base
-CREATE DATABASE IF NOT EXISTS scp_db;
+CREATE DATABASE IF NOT EXISTS scp_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE scp_db;
 
 -- Supprimer les tables si elles existent (ordre inverse des dépendances)
@@ -93,3 +97,48 @@ CREATE TABLE Access (
     FOREIGN KEY (id_scp) REFERENCES SCP(id_scp),
     FOREIGN KEY (id_user) REFERENCES `User`(id_user)
 );
+
+-- Insertion des données de bases
+
+-- SCPClass
+-- Safe
+INSERT INTO SCPClass (name, description, category) 
+VALUES ('Safe', 'Contenus et sans risque immédiat.', 'Primaire');
+-- Euclid
+INSERT INTO SCPClass (name, description, category) 
+VALUES ('Euclid', 'Imprévisibles, nécessitant une surveillance constante.', 'Primaire');
+-- Keter
+INSERT INTO SCPClass (name, description, category) 
+VALUES ('Keter', 'Dangereux et difficiles à contenir.', 'Primaire');
+-- Thaumiel
+INSERT INTO SCPClass (name, description, category) 
+VALUES ('Thaumiel', 'Utilisés par la Fondation pour contenir d’autres SCP.', 'Secondaire');
+-- Apollyon
+INSERT INTO SCPClass (name, description, category) 
+VALUES ('Apollyon', 'Impossible à contenir.', 'Secondaire');
+-- Archon
+INSERT INTO SCPClass (name, description, category) 
+VALUES ('Archon', 'Peuvent être théoriquement contenus mais ne le sont pas pour certaines raisons.', 'Secondaire');
+-- Ticonderoga
+INSERT INTO SCPClass (name, description, category) 
+VALUES ('Ticonderoga', 'Impossible à contenir mais n’ayant pas besoin d’être contenus.', 'Secondaire');
+
+-- SCPClassification
+-- INSERT INTO SCPClassification (color, description) 
+-- VALUES ('TODO', 'TODO');
+
+-- Sites
+-- INSERT INTO Site (address, description, cell) 
+-- VALUES ('TODO', 'TODO', 'TODO');
+
+-- UserClass
+-- INSERT INTO UserClass (level, description, authorization) 
+-- VALUES (0, 'TODO', 'TODO');
+
+-- SCPs
+-- INSERT INTO SCP (number, title, description, image, threat_level, nationality, id_scp_class, id_scp_classification, id_site) 
+-- VALUES ('TODO', 'TODO', 'TODO', 'TODO.jpg', 'TODO', 'TODO', 0, 0, 0);
+
+-- Utilisateurs
+-- INSERT INTO `User` (first_name, last_name, user_name, email, id_user_class) 
+-- VALUES ('TODO', 'TODO', 'TODO', 'to.do@foundation.scp', 0);
