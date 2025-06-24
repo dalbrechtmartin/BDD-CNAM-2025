@@ -102,82 +102,95 @@ CREATE TABLE Access (
 
 -- SCPClass
 -- Safe
-INSERT INTO SCPClass (name, description, category) 
-VALUES ('Safe', 'Contenus et sans risque immédiat.', 'Primaire');
--- Euclid
-INSERT INTO SCPClass (name, description, category) 
-VALUES ('Euclid', 'Imprévisibles, nécessitant une surveillance constante.', 'Primaire');
--- Keter
-INSERT INTO SCPClass (name, description, category) 
-VALUES ('Keter', 'Dangereux et difficiles à contenir.', 'Primaire');
--- Thaumiel
-INSERT INTO SCPClass (name, description, category) 
-VALUES ('Thaumiel', 'Utilisés par la Fondation pour contenir d’autres SCP.', 'Secondaire');
--- Apollyon
-INSERT INTO SCPClass (name, description, category) 
-VALUES ('Apollyon', 'Impossible à contenir.', 'Secondaire');
--- Archon
-INSERT INTO SCPClass (name, description, category) 
-VALUES ('Archon', 'Peuvent être théoriquement contenus mais ne le sont pas pour certaines raisons.', 'Secondaire');
--- Ticonderoga
-INSERT INTO SCPClass (name, description, category) 
-VALUES ('Ticonderoga', 'Impossible à contenir mais n’ayant pas besoin d’être contenus.', 'Secondaire');
+INSERT INTO SCPClass (name, description, category) VALUES
+('Safe', 'Contenus et sans risque immédiat.', 'Primaire'),
+('Euclid', 'Imprévisibles, nécessitant une surveillance constante.', 'Primaire'),
+('Keter', 'Dangereux et difficiles à contenir.', 'Primaire'),
+('Thaumiel', 'Utilisés par la Fondation pour contenir d’autres SCP.', 'Secondaire'),
+('Apollyon', 'Impossible à contenir.', 'Secondaire'),
+('Archon', 'Peuvent être théoriquement contenus mais ne le sont pas pour certaines raisons.', 'Secondaire'),
+('Ticonderoga', 'Impossible à contenir mais n’ayant pas besoin d’être contenus.', 'Secondaire');
 
 -- SCPClassification
-INSERT INTO SCPClassification (color, description) 
-VALUES ('Vert', 'Danger minimal - Confinement simple et stable');
-
-INSERT INTO SCPClassification (color, description) 
-VALUES ('Jaune', 'Danger modéré - Surveillance régulière requise');
-
-INSERT INTO SCPClassification (color, description) 
-VALUES ('Orange', 'Danger élevé - Procédures de sécurité strictes');
-
-INSERT INTO SCPClassification (color, description) 
-VALUES ('Rouge', 'Danger critique - Confinement spécial et personnel hautement qualifié');
-
-INSERT INTO SCPClassification (color, description) 
-VALUES ('Noir', 'Danger existentiel - Confinement prioritaire, accès limité au niveau O5');
-
-INSERT INTO SCPClassification (color, description) 
-VALUES ('Bleu', 'Ressource stratégique - Utilisé pour le confinement d’autres SCP');
-
-INSERT INTO SCPClassification (color, description) 
-VALUES ('Violet', 'Anomalie surveillée - Non confiné mais sous observation');
+INSERT INTO SCPClassification (color, description) VALUES
+('Vert', 'Danger minimal - Confinement simple et stable'),
+('Jaune', 'Danger modéré - Surveillance régulière requise'),
+('Orange', 'Danger élevé - Procédures de sécurité strictes'),
+('Rouge', 'Danger critique - Confinement spécial et personnel hautement qualifié'),
+('Noir', 'Danger existentiel - Confinement prioritaire, accès limité au niveau O5'),
+('Bleu', 'Ressource stratégique - Utilisé pour le confinement d’autres SCP'),
+('Violet', 'Anomalie surveillée - Non confiné mais sous observation');
 
 -- Sites
--- INSERT INTO Site (address, description, cell) 
--- VALUES ('TODO', 'TODO', 'TODO');
+INSERT INTO Site (address, description, cell)
+VALUES ('Site-19, USA', 'Plus grande installation de la Fondation, spécialisée dans le confinement d’entités Euclide et Keter', 'Secteur B');
 
 -- UserClass
-INSERT INTO UserClass (level, description, authorization) 
-VALUES (5, 'Conseil O5 - Supervision de la Fondation, accès total à tous les fichiers', 'Classe A - Accès illimité');
+INSERT INTO UserClass (level, description, authorization) VALUES
+(5, 'Conseil O5 - Supervision de la Fondation, accès total à tous les fichiers', 'Classe A - Accès illimité'),
+(4, 'Direction de site et hauts responsables, gestion des équipes et incidents critiques', 'Classe B - Accès élevé'),
+(3, 'Chercheurs et agents de terrain, accès aux SCP liés à leurs travaux', 'Classe C - Accès moyen'),
+(1, 'Personnel de classe D, majoritairement composé de prisonniers utilisés comme testeurs', 'Classe D - Accès minimal'),
+(2, 'Personnel en quarantaine après exposition à des SCP', 'Classe E - Accès conditionnel'),
+(0, 'Visiteurs et personnel non autorisé', 'Non classifié - Accès public uniquement');
 
-INSERT INTO UserClass (level, description, authorization) 
-VALUES (4, 'Direction de site et hauts responsables, gestion des équipes et incidents critiques', 'Classe B - Accès élevé');
+-- SCPs (SCP-173, id_scp_class=2 (Euclid), id_scp_classification=4 (Rouge), id_site=1)
+INSERT INTO SCP (
+    number, title, description, image, threat_level, nationality,
+    id_scp_class, id_scp_classification, id_site
+) VALUES (
+    'SCP-173',
+    'La Sculpture',
+    'Statue humanoïde en béton et barres d’armature recouverte de peinture acrylique. L’entité est animée et extrêmement hostile, mais ne peut bouger que lorsqu’elle n’est pas observée directement.',
+    'scp173.jpg',
+    'Élevé',
+    'Inconnue',
+    2,  -- id_scp_class (Euclid)
+    4,  -- id_scp_classification (Rouge)
+    1   -- id_site (Site-19)
+);
 
-INSERT INTO UserClass (level, description, authorization) 
-VALUES (3, 'Chercheurs et agents de terrain, accès aux SCP liés à leurs travaux', 'Classe C - Accès moyen');
+-- Utilisateurs (id_user_class: 5=Classe A, 4=Classe B, 3=Classe C, 2=Classe E)
+INSERT INTO `User` (first_name, last_name, user_name, email, id_user_class) VALUES
+('Christofeur', 'GERARD', 'Christ0u', 'Christ0u.gerard@foundation.scp', 1), -- Classe D
+('Elliot', 'CARTER', 'ecarter', 'elliot.carter@foundation.scp', 2),         -- Classe E
+('Paul', 'MARTIN', 'pmartin', 'paul.martin@foundation.scp', 3),              -- Classe C
+('Danaé', 'ALBRECHT--MARTIN', 'YumieY0ru', 'YumieY0ru.albrechtmartin@foundation.scp', 4); -- Classe B
 
-INSERT INTO UserClass (level, description, authorization) 
-VALUES (1, 'Personnel de classe D, majoritairement composé de prisonniers utilisés comme testeurs', 'Classe D - Accès minimal');
+-- Incidents (id_scp=1 si SCP-173 est le premier SCP inséré)
+INSERT INTO Incident (title, date, description, id_scp) VALUES
+('Attaque lors d\'un test de surveillance', '2025-06-24', 'Un garde de classe C a été attaqué par SCP-173 alors qu’il prétendait ne jamais l’avoir quitté des yeux. Rapport marqué comme "Non vérifié".', 1),
+('Découverte d\'une nouvelle anomalie', '2025-06-23', 'SCP-173 a manifesté la capacité de se déplacer à travers des surfaces réfléchissantes. Rapport classé "Classe A - Accès restreint".', 1);
 
-INSERT INTO UserClass (level, description, authorization) 
-VALUES (2, 'Personnel en quarantaine après exposition à des SCP', 'Classe E - Accès conditionnel');
+-- Affectation chercheur -> site (optionnel, id_site=1, id_user=2 pour Elliot Carter)
+INSERT INTO Work (id_site, id_user) VALUES (1, 2);
 
-INSERT INTO UserClass (level, description, authorization) 
-VALUES (0, 'Visiteurs et personnel non autorisé', 'Non classifié - Accès public uniquement');
+-- Procédures stockées
+DELIMITER $$
 
--- SCPs
--- INSERT INTO SCP (number, title, description, image, threat_level, nationality, id_scp_class, id_scp_classification, id_site) 
--- VALUES ('TODO', 'TODO', 'TODO', 'TODO.jpg', 'TODO', 'TODO', 0, 0, 0);
+CREATE PROCEDURE GetSCPIncidentsIfClassA(
+    IN p_user_id INT,
+    IN p_scp_number VARCHAR(20)
+)
+BEGIN
+    DECLARE user_level INT;
 
--- Utilisateurs
--- INSERT INTO `User` (first_name, last_name, user_name, email, id_user_class) 
--- VALUES ('TODO', 'TODO', 'TODO', 'to.do@foundation.scp', 0);
+    -- Récupérer le niveau de classe de l'utilisateur
+    SELECT uc.level INTO user_level
+    FROM `User` u
+    JOIN UserClass uc ON u.id_user_class = uc.id_user_class
+    WHERE u.id_user = p_user_id;
 
-INSERT INTO `User` (first_name, last_name, user_name, email, id_user_class) 
-VALUES ('Christofeur', 'GERARD', 'Christ0u', 'Christ0u.gerard@foundation.scp', 3);
+    IF user_level = 5 THEN
+        -- Afficher les incidents liés au SCP demandé
+        SELECT i.id_incident, i.title, i.date, i.description, scp.number AS scp_number
+        FROM Incident i
+        JOIN SCP scp ON i.id_scp = scp.id_scp
+        WHERE scp.number = p_scp_number;
+    ELSE
+        -- Message d'alerte si l'utilisateur n'est pas Classe A
+        SELECT 'Alerte : ce fichier dépasse votre niveau. Demandez une autorisation temporaire.' AS message;
+    END IF;
+END$$
 
-INSERT INTO `User` (first_name, last_name, user_name, email, id_user_class) 
-VALUES ('Danaé', 'ALBRECHT--MARTIN', 'YumieY0ru', 'YumieY0ru.albrechtmartin@foundation.scp', 2);
+DELIMITER ;

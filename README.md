@@ -1,4 +1,3 @@
-
 # SCP Database Setup and Query Guide
 
 ## 🚀 **Introduction**
@@ -32,6 +31,7 @@ docker-compose up --build
 ```
 
 Cela va :
+
 - Lancer un conteneur Docker avec MySQL
 - Créer la base de données `scp_db`
 - Exécuter le script d'initialisation (`init.sql`)
@@ -125,10 +125,53 @@ WHERE a.id_userFK = 1;
 
 ---
 
+## 📊 **Exemples de scénarios d'utilisation**
+
+Voici quelques scénarios plus concrets pour l'utilisation de la base `scp_db` :
+
+### 📝 **Scénario 1 – Accès aux incidents selon la classe utilisateur**
+
+**Contexte :**  
+Un chercheur (Dr. Carter, Classe B) souhaite consulter les incidents liés à un SCP (ex : SCP-173).  
+Grâce au moteur de recherche, il filtre les rapports selon la classification du personnel.  
+Si un incident est classé au-dessus de son niveau (Classe A), il reçoit une alerte :
+
+> "Alerte : ce fichier dépasse votre niveau. Demandez une autorisation temporaire."
+
+---
+
+### ⚙️ **Utiliser la procédure stockée du scénario 1**
+
+Une procédure stockée nommée **GetSCPIncidentsIfClassA** permet de lister les incidents liés à un SCP, mais **seuls les utilisateurs de Classe A (level = 5) peuvent voir les détails**.  
+Les autres reçoivent un message d’alerte.
+
+#### **Appeler la procédure stockée**
+
+1. **Connectez-vous à MySQL** (voir plus haut pour la connexion via Docker ou DBeaver).
+2. **Sélectionnez la base** :
+   ```sql
+   USE scp_db;
+   ```
+3. **Appelez la procédure** en remplaçant `id_user` par l’ID de l’utilisateur et `'SCP-173'` par le numéro du SCP voulu :
+   ```sql
+   CALL GetSCPIncidentsIfClassA(1, 'SCP-173');
+   ```
+   - Si l’utilisateur est Classe A, la liste des incidents s’affiche.
+   - Sinon, un message d’alerte est retourné.
+
+#### **Trouver l’ID d’un utilisateur**
+
+Pour connaître les IDs disponibles :
+
+```sql
+SELECT id_user, first_name, id_user_class FROM `User`;
+```
+
+---
+
 ## ⚙️ **Dépannage**
 
 - **Erreur de connexion MySQL** : Vérifiez que le conteneur MySQL est bien en cours d'exécution avec `docker ps`. Si le conteneur est arrêté, relancez-le avec `docker-compose up`.
-  
 - **Problèmes de requêtes SQL** : Si vous rencontrez des erreurs lors de l'exécution des requêtes, assurez-vous d'être bien connecté à la base de données `scp_db` avec la commande `USE scp_db;`.
 
 ---
@@ -136,6 +179,7 @@ WHERE a.id_userFK = 1;
 ## 🧑‍💻 **Gestion des migrations et modifications de schéma**
 
 Si vous devez modifier le schéma ou ajouter de nouvelles tables :
+
 1. Modifiez le fichier `init.sql` avec les nouvelles instructions.
 2. Redémarrez le conteneur avec `docker-compose down` puis `docker-compose up --build`.
 
