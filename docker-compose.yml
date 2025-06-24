@@ -8,7 +8,10 @@ services:
       MYSQL_DATABASE: scp_db
       MYSQL_USER: scp_user
       MYSQL_PASSWORD: scp_password
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
     ports:
       - "3306:3306"
     volumes:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci

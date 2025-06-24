@@ -1,5 +1,9 @@
+-- Encodage des caractères
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+
 -- Créer la base
-CREATE DATABASE IF NOT EXISTS scp_db;
+CREATE DATABASE IF NOT EXISTS scp_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE scp_db;
 
 -- Supprimer les tables si elles existent (ordre inverse des dépendances)
@@ -93,3 +97,87 @@ CREATE TABLE Access (
     FOREIGN KEY (id_scp) REFERENCES SCP(id_scp),
     FOREIGN KEY (id_user) REFERENCES `User`(id_user)
 );
+
+-- Insertion des données de bases
+
+-- SCPClass
+-- Safe
+INSERT INTO SCPClass (name, description, category) 
+VALUES ('Safe', 'Contenus et sans risque immédiat.', 'Primaire');
+-- Euclid
+INSERT INTO SCPClass (name, description, category) 
+VALUES ('Euclid', 'Imprévisibles, nécessitant une surveillance constante.', 'Primaire');
+-- Keter
+INSERT INTO SCPClass (name, description, category) 
+VALUES ('Keter', 'Dangereux et difficiles à contenir.', 'Primaire');
+-- Thaumiel
+INSERT INTO SCPClass (name, description, category) 
+VALUES ('Thaumiel', 'Utilisés par la Fondation pour contenir d’autres SCP.', 'Secondaire');
+-- Apollyon
+INSERT INTO SCPClass (name, description, category) 
+VALUES ('Apollyon', 'Impossible à contenir.', 'Secondaire');
+-- Archon
+INSERT INTO SCPClass (name, description, category) 
+VALUES ('Archon', 'Peuvent être théoriquement contenus mais ne le sont pas pour certaines raisons.', 'Secondaire');
+-- Ticonderoga
+INSERT INTO SCPClass (name, description, category) 
+VALUES ('Ticonderoga', 'Impossible à contenir mais n’ayant pas besoin d’être contenus.', 'Secondaire');
+
+-- SCPClassification
+INSERT INTO SCPClassification (color, description) 
+VALUES ('Vert', 'Danger minimal - Confinement simple et stable');
+
+INSERT INTO SCPClassification (color, description) 
+VALUES ('Jaune', 'Danger modéré - Surveillance régulière requise');
+
+INSERT INTO SCPClassification (color, description) 
+VALUES ('Orange', 'Danger élevé - Procédures de sécurité strictes');
+
+INSERT INTO SCPClassification (color, description) 
+VALUES ('Rouge', 'Danger critique - Confinement spécial et personnel hautement qualifié');
+
+INSERT INTO SCPClassification (color, description) 
+VALUES ('Noir', 'Danger existentiel - Confinement prioritaire, accès limité au niveau O5');
+
+INSERT INTO SCPClassification (color, description) 
+VALUES ('Bleu', 'Ressource stratégique - Utilisé pour le confinement d’autres SCP');
+
+INSERT INTO SCPClassification (color, description) 
+VALUES ('Violet', 'Anomalie surveillée - Non confiné mais sous observation');
+
+-- Sites
+-- INSERT INTO Site (address, description, cell) 
+-- VALUES ('TODO', 'TODO', 'TODO');
+
+-- UserClass
+INSERT INTO UserClass (level, description, authorization) 
+VALUES (5, 'Conseil O5 - Supervision de la Fondation, accès total à tous les fichiers', 'Classe A - Accès illimité');
+
+INSERT INTO UserClass (level, description, authorization) 
+VALUES (4, 'Direction de site et hauts responsables, gestion des équipes et incidents critiques', 'Classe B - Accès élevé');
+
+INSERT INTO UserClass (level, description, authorization) 
+VALUES (3, 'Chercheurs et agents de terrain, accès aux SCP liés à leurs travaux', 'Classe C - Accès moyen');
+
+INSERT INTO UserClass (level, description, authorization) 
+VALUES (1, 'Personnel de classe D, majoritairement composé de prisonniers utilisés comme testeurs', 'Classe D - Accès minimal');
+
+INSERT INTO UserClass (level, description, authorization) 
+VALUES (2, 'Personnel en quarantaine après exposition à des SCP', 'Classe E - Accès conditionnel');
+
+INSERT INTO UserClass (level, description, authorization) 
+VALUES (0, 'Visiteurs et personnel non autorisé', 'Non classifié - Accès public uniquement');
+
+-- SCPs
+-- INSERT INTO SCP (number, title, description, image, threat_level, nationality, id_scp_class, id_scp_classification, id_site) 
+-- VALUES ('TODO', 'TODO', 'TODO', 'TODO.jpg', 'TODO', 'TODO', 0, 0, 0);
+
+-- Utilisateurs
+-- INSERT INTO `User` (first_name, last_name, user_name, email, id_user_class) 
+-- VALUES ('TODO', 'TODO', 'TODO', 'to.do@foundation.scp', 0);
+
+INSERT INTO `User` (first_name, last_name, user_name, email, id_user_class) 
+VALUES ('Christofeur', 'GERARD', 'Christ0u', 'Christ0u.gerard@foundation.scp', 3);
+
+INSERT INTO `User` (first_name, last_name, user_name, email, id_user_class) 
+VALUES ('Danaé', 'ALBRECHT--MARTIN', 'YumieY0ru', 'YumieY0ru.albrechtmartin@foundation.scp', 2);
