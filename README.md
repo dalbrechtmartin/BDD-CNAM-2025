@@ -154,7 +154,7 @@ Les autres reçoivent un message d’alerte.
    ```
 3. **Appelez la procédure** en remplaçant `id_user` par l’ID de l’utilisateur et `'SCP-173'` par le numéro du SCP voulu :
    ```sql
-   CALL GetSCPIncidentsIfClassA(1, 'SCP-173');
+   CALL GetSCPIncidentsIfClassA(id_user, 'SCP-173');
    ```
    - Si l’utilisateur est Classe A, la liste des incidents s’affiche.
    - Sinon, un message d’alerte est retourné.
