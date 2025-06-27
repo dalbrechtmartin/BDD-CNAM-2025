@@ -109,7 +109,7 @@ INSERT INTO SCPClass (name, description, category) VALUES
 ('Thaumiel', 'Utilisés par la Fondation pour contenir d''autres SCP.', 'Secondaire'),
 ('Apollyon', 'Impossible à contenir.', 'Secondaire'),
 ('Archon', 'Peuvent être théoriquement contenus mais ne le sont pas pour certaines raisons.', 'Secondaire'),
-('Ticonderoga', 'Impossible à contenir mais n'ayant pas besoin d'être contenus.', 'Secondaire');
+('Ticonderoga', 'Impossible à contenir mais n''ayant pas besoin d''être contenus.', 'Secondaire');
 
 -- SCPClassification
 INSERT INTO SCPClassification (color, description) VALUES
