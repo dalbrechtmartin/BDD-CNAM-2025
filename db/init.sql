@@ -101,83 +101,239 @@ CREATE TABLE Access (
 -- Insertion des données de bases
 
 -- SCPClass
--- Safe
-INSERT INTO SCPClass (name, description, category) 
-VALUES ('Safe', 'Contenus et sans risque immédiat.', 'Primaire');
--- Euclid
-INSERT INTO SCPClass (name, description, category) 
-VALUES ('Euclid', 'Imprévisibles, nécessitant une surveillance constante.', 'Primaire');
--- Keter
-INSERT INTO SCPClass (name, description, category) 
-VALUES ('Keter', 'Dangereux et difficiles à contenir.', 'Primaire');
--- Thaumiel
-INSERT INTO SCPClass (name, description, category) 
-VALUES ('Thaumiel', 'Utilisés par la Fondation pour contenir d’autres SCP.', 'Secondaire');
--- Apollyon
-INSERT INTO SCPClass (name, description, category) 
-VALUES ('Apollyon', 'Impossible à contenir.', 'Secondaire');
--- Archon
-INSERT INTO SCPClass (name, description, category) 
-VALUES ('Archon', 'Peuvent être théoriquement contenus mais ne le sont pas pour certaines raisons.', 'Secondaire');
--- Ticonderoga
-INSERT INTO SCPClass (name, description, category) 
-VALUES ('Ticonderoga', 'Impossible à contenir mais n’ayant pas besoin d’être contenus.', 'Secondaire');
+INSERT INTO SCPClass (name, description, category) VALUES
+('Safe', 'Contenus et sans risque immédiat.', 'Primaire'),
+('Euclid', 'Imprévisibles, nécessitant une surveillance constante.', 'Primaire'),
+('Keter', 'Dangereux et difficiles à contenir.', 'Primaire'),
+('Thaumiel', 'Utilisés par la Fondation pour contenir d''autres SCP.', 'Secondaire'),
+('Apollyon', 'Impossible à contenir.', 'Secondaire'),
+('Archon', 'Peuvent être théoriquement contenus mais ne le sont pas pour certaines raisons.', 'Secondaire'),
+('Ticonderoga', 'Impossible à contenir mais n''ayant pas besoin d''être contenus.', 'Secondaire');
 
 -- SCPClassification
-INSERT INTO SCPClassification (color, description) 
-VALUES ('Vert', 'Danger minimal - Confinement simple et stable');
-
-INSERT INTO SCPClassification (color, description) 
-VALUES ('Jaune', 'Danger modéré - Surveillance régulière requise');
-
-INSERT INTO SCPClassification (color, description) 
-VALUES ('Orange', 'Danger élevé - Procédures de sécurité strictes');
-
-INSERT INTO SCPClassification (color, description) 
-VALUES ('Rouge', 'Danger critique - Confinement spécial et personnel hautement qualifié');
-
-INSERT INTO SCPClassification (color, description) 
-VALUES ('Noir', 'Danger existentiel - Confinement prioritaire, accès limité au niveau O5');
-
-INSERT INTO SCPClassification (color, description) 
-VALUES ('Bleu', 'Ressource stratégique - Utilisé pour le confinement d’autres SCP');
-
-INSERT INTO SCPClassification (color, description) 
-VALUES ('Violet', 'Anomalie surveillée - Non confiné mais sous observation');
+INSERT INTO SCPClassification (color, description) VALUES
+('Vert', 'Danger minimal - Confinement simple et stable'),
+('Jaune', 'Danger modéré - Surveillance régulière requise'),
+('Orange', 'Danger élevé - Procédures de sécurité strictes'),
+('Rouge', 'Danger critique - Confinement spécial et personnel hautement qualifié'),
+('Noir', 'Danger existentiel - Confinement prioritaire, accès limité au niveau O5'),
+('Bleu', 'Ressource stratégique - Utilisé pour le confinement d''autres SCP'),
+('Violet', 'Anomalie surveillée - Non confiné mais sous observation');
 
 -- Sites
--- INSERT INTO Site (address, description, cell) 
--- VALUES ('TODO', 'TODO', 'TODO');
+INSERT INTO Site (address, description, cell)
+VALUES ('Site-19, USA', 'Plus grande installation de la Fondation, spécialisée dans le confinement d''entités Euclide et Keter', 'Secteur B');
 
 -- UserClass
-INSERT INTO UserClass (level, description, authorization) 
-VALUES (5, 'Conseil O5 - Supervision de la Fondation, accès total à tous les fichiers', 'Classe A - Accès illimité');
-
-INSERT INTO UserClass (level, description, authorization) 
-VALUES (4, 'Direction de site et hauts responsables, gestion des équipes et incidents critiques', 'Classe B - Accès élevé');
-
-INSERT INTO UserClass (level, description, authorization) 
-VALUES (3, 'Chercheurs et agents de terrain, accès aux SCP liés à leurs travaux', 'Classe C - Accès moyen');
-
-INSERT INTO UserClass (level, description, authorization) 
-VALUES (1, 'Personnel de classe D, majoritairement composé de prisonniers utilisés comme testeurs', 'Classe D - Accès minimal');
-
-INSERT INTO UserClass (level, description, authorization) 
-VALUES (2, 'Personnel en quarantaine après exposition à des SCP', 'Classe E - Accès conditionnel');
-
-INSERT INTO UserClass (level, description, authorization) 
-VALUES (0, 'Visiteurs et personnel non autorisé', 'Non classifié - Accès public uniquement');
+INSERT INTO UserClass (level, description, authorization) VALUES
+(5, 'Conseil O5 - Supervision de la Fondation, accès total à tous les fichiers', 'Classe A - Accès illimité'),
+(4, 'Direction de site et hauts responsables, gestion des équipes et incidents critiques', 'Classe B - Accès élevé'),
+(3, 'Chercheurs et agents de terrain, accès aux SCP liés à leurs travaux', 'Classe C - Accès moyen'),
+(1, 'Personnel de classe D, majoritairement composé de prisonniers utilisés comme testeurs', 'Classe D - Accès minimal'),
+(2, 'Personnel en quarantaine après exposition à des SCP', 'Classe E - Accès conditionnel'),
+(0, 'Visiteurs et personnel non autorisé', 'Non classifié - Accès public uniquement');
 
 -- SCPs
--- INSERT INTO SCP (number, title, description, image, threat_level, nationality, id_scp_class, id_scp_classification, id_site) 
--- VALUES ('TODO', 'TODO', 'TODO', 'TODO.jpg', 'TODO', 'TODO', 0, 0, 0);
+INSERT INTO SCP (
+    number, title, description, image, threat_level, nationality,
+    id_scp_class, id_scp_classification, id_site
+) VALUES (
+    'SCP-173',
+    'La Sculpture',
+    'Statue humanoïde en béton et barres d''armature recouverte de peinture acrylique. L''entité est animée et extrêmement hostile, mais ne peut bouger que lorsqu''elle n''est pas observée directement.',
+    'scp173.jpg',
+    'Élevé',
+    'Inconnue',
+    2,  -- id_scp_class (Euclid)
+    4,  -- id_scp_classification (Rouge)
+    1   -- id_site (Site-19)
+),
+(
+    'SCP-001',
+    '[DONNÉES EXPURGÉES]',
+    '[ACCÈS RESTREINT - NIVEAU O5 UNIQUEMENT] Ce fichier contient des informations classifiées concernant [DONNÉES EXPURGÉES]. Toute tentative d''accès non autorisé sera sanctionnée conformément au Protocole de Sécurité Alpha.',
+    'scp001_classified.jpg',
+    'MAXIMUM',
+    '[EXPURGÉ]',
+    5,  -- id_scp_class (Apollyon)
+    5,  -- id_scp_classification (Noir)
+    1   -- id_site (Site-19)
+),
+(
+    'SCP-3008',
+    'L''IKEA Infini',
+    'SCP-3008 est un grand magasin de meubles ayant l''apparence d''un IKEA typique. Toute personne entrant dans SCP-3008 pendant les heures d''ouverture devient incapable de sortir. L''intérieur de SCP-3008 s''étend apparemment à l''infini et contient une société humaine improvisée de personnes piégées.',
+    'scp3008.jpg',
+    'Élevé',
+    'Nevada, USA',
+    2,  -- id_scp_class (Euclid)
+    3,  -- id_scp_classification (Orange)
+    1   -- id_site (Site-19)
+);
 
 -- Utilisateurs
--- INSERT INTO `User` (first_name, last_name, user_name, email, id_user_class) 
--- VALUES ('TODO', 'TODO', 'TODO', 'to.do@foundation.scp', 0);
+INSERT INTO `User` (first_name, last_name, user_name, email, id_user_class) VALUES
+('Christofeur', 'GERARD', 'Christ0u', 'Christ0u.gerard@foundation.scp', 5),                 -- Classe A
+('Elliot', 'CARTER', 'ecarter', 'elliot.carter@foundation.scp', 4),                         -- Classe B
+('Paul', 'MARTIN', 'pmartin', 'paul.martin@foundation.scp', 3),                             -- Classe C
+('Danaé', 'ALBRECHT--MARTIN', 'YumieY0ru', 'YumieY0ru.albrechtmartin@foundation.scp', 2),   -- Classe E
+('Michael', 'THOMPSON', 'mthompson', 'michael.thompson@foundation.scp', 3),                 -- Classe C
+('Dr. James', 'HAYWARD', 'jhayward', 'james.hayward@foundation.scp', 4),                    -- Classe B (décédé)
+('Agent Maria', 'RAMIREZ', 'mramirez', 'maria.ramirez@foundation.scp', 3);                  -- Classe C
+('D-5847', 'ROBINSON', 'd5847', 'd5847@foundation.scp', 1);                                 -- Classe D
 
-INSERT INTO `User` (first_name, last_name, user_name, email, id_user_class) 
-VALUES ('Christofeur', 'GERARD', 'Christ0u', 'Christ0u.gerard@foundation.scp', 3);
+-- Incidents
+INSERT INTO Incident (title, date, description, id_scp) VALUES
+('Attaque lors d''un test de surveillance', '2025-06-24', 'Un garde de classe C a été attaqué par SCP-173 alors qu''il prétendait ne jamais l''avoir quitté des yeux. Rapport marqué comme "Non vérifié".', 1),
+('Découverte d''une nouvelle anomalie', '2025-06-23', 'SCP-173 a manifesté la capacité de se déplacer à travers des surfaces réfléchissantes. Rapport classé "Classe A - Accès restreint".', 1),
+('Tentative d''accès non autorisé - INCIDENT CRITIQUE', '2025-06-27', 'ALERTE SÉCURITÉ : Détection d''une tentative d''accès au dossier SCP-001 par l''utilisateur jhayward (Dr. James Hayward), officiellement décédé il y a 3 ans lors d''un incident de confinement. Origine : Terminal-B7-Site19. Protocole de verrouillage automatique activé. Incident assigné à Michael Thompson (cybersécurité) pour investigation. Équipe de sécurité Classe A déployée.', 2),
+('Disparitions inexpliquées - Nevada', '2025-06-26', 'Série de disparitions signalées dans une petite ville du Nevada. Les témoins mentionnent un magasin de meubles isolé. Investigation en cours par l''Agent Ramirez.', 3),
+('Témoignage de survivant - Évasion SCP-3008', '2024-12-15', 'Témoignage de [CENSURÉ] : "J''ai trouvé une zone où les murs semblaient instables, comme s''ils scintillaient. J''ai poussé fort et soudain je me suis retrouvé dehors. Les employés d''IKEA ne m''ont pas suivi." Méthode d''évasion confirmée par 3 autres survivants.', 3),
+('Attaque nocturne - Employés hostiles', '2024-08-10', 'Témoignage multiple : entités humanoïdes en uniforme IKEA attaquent systématiquement les survivants pendant la nuit. Recommandation : éviter les zones ouvertes après la fermeture des lumières du magasin.', 3);
 
-INSERT INTO `User` (first_name, last_name, user_name, email, id_user_class) 
-VALUES ('Danaé', 'ALBRECHT--MARTIN', 'YumieY0ru', 'YumieY0ru.albrechtmartin@foundation.scp', 2);
+-- Affectation chercheur -> site
+INSERT INTO Work (id_site, id_user) VALUES 
+(1, 2),  -- Elliot Carter au Site-19
+(1, 5),  -- Michael Thompson au Site-19
+(1, 7);  -- Agent Ramirez au Site-19
+
+-- Données pour le scénario 2 : Tentatives d''accès suspectes
+INSERT INTO Access (id_scp, id_user, date_access) VALUES 
+(2, 6, '2025-06-27 14:32:17'),  -- Dr. Hayward tente d''accéder à SCP-001
+(2, 6, '2025-06-27 14:32:45'),  -- Seconde tentative 28 secondes plus tard
+(2, 6, '2025-06-27 14:33:02');  -- Troisième tentative bloquée par le système
+
+-- Procédures stockées
+DELIMITER $$
+
+CREATE PROCEDURE GetSCPIncidentsIfClassA(
+    IN p_user_id INT,
+    IN p_scp_number VARCHAR(20)
+)
+BEGIN
+    DECLARE user_level INT;
+
+    -- Récupérer le niveau de classe de l''utilisateur
+    SELECT uc.level INTO user_level
+    FROM `User` u
+    JOIN UserClass uc ON u.id_user_class = uc.id_user_class
+    WHERE u.id_user = p_user_id;
+
+    IF user_level = 5 THEN
+        -- Afficher les incidents liés au SCP demandé
+        SELECT i.id_incident, i.title, i.date, i.description, scp.number AS scp_number
+        FROM Incident i
+        JOIN SCP scp ON i.id_scp = scp.id_scp
+        WHERE scp.number = p_scp_number;
+    ELSE
+        -- Message d''alerte si l''utilisateur n''est pas Classe A
+        SELECT 'Alerte : ce fichier dépasse votre niveau. Demandez une autorisation temporaire.' AS message;
+    END IF;
+END$$
+
+-- Procédure pour analyser les accès suspects (Scénario 2)
+CREATE PROCEDURE GetSuspiciousAccess(
+    IN p_user_id INT
+)
+BEGIN
+    DECLARE user_level INT;
+    
+    -- Récupérer le niveau de l''utilisateur
+    SELECT uc.level INTO user_level
+    FROM `User` u
+    JOIN UserClass uc ON u.id_user_class = uc.id_user_class
+    WHERE u.id_user = p_user_id;
+    
+    -- Seuls les utilisateurs de Classe C et plus peuvent consulter les accès suspects
+    IF user_level >= 3 THEN
+        SELECT 
+            a.date_access,
+            u.user_name,
+            CONCAT(u.first_name, ' ', u.last_name) as full_name,
+            s.number as scp_number,
+            s.title as scp_title,
+            uc.description as user_class,
+            'ACCÈS SUSPECT' as alert_type
+        FROM Access a
+        JOIN `User` u ON a.id_user = u.id_user
+        JOIN SCP s ON a.id_scp = s.id_scp
+        JOIN UserClass uc ON u.id_user_class = uc.id_user_class
+        WHERE s.number = 'SCP-001'
+        ORDER BY a.date_access DESC;
+    ELSE
+        SELECT 'ACCÈS REFUSÉ: Niveau de sécurité insuffisant.' as message;
+    END IF;
+END$$
+
+-- Procédure de recherche par mots-clés (Scénario 3)
+CREATE PROCEDURE SearchSCPByKeywords(
+    IN p_user_id INT,
+    IN p_keywords VARCHAR(255)
+)
+BEGIN
+    DECLARE user_level INT;
+    
+    -- Récupérer le niveau de l''utilisateur
+    SELECT uc.level INTO user_level
+    FROM `User` u
+    JOIN UserClass uc ON u.id_user_class = uc.id_user_class
+    WHERE u.id_user = p_user_id;
+    
+    -- Seuls les utilisateurs de Classe C et plus peuvent faire des recherches
+    IF user_level >= 3 THEN
+        SELECT 
+            s.number,
+            s.title,
+            s.description,
+            sc.name as scp_class,
+            scl.color as classification,
+            s.threat_level,
+            s.nationality,
+            'CORRESPONDANCE TROUVÉE' as search_result
+        FROM SCP s
+        JOIN SCPClass sc ON s.id_scp_class = sc.id_scp_class
+        JOIN SCPClassification scl ON s.id_scp_classification = scl.id_scp_classification
+        WHERE LOWER(s.description) LIKE CONCAT('%', LOWER(p_keywords), '%')
+           OR LOWER(s.title) LIKE CONCAT('%', LOWER(p_keywords), '%')
+           OR LOWER(s.nationality) LIKE CONCAT('%', LOWER(p_keywords), '%')
+        ORDER BY s.threat_level DESC, s.number;
+    ELSE
+        SELECT 'ACCÈS REFUSÉ: Niveau de sécurité insuffisant pour effectuer des recherches.' as message;
+    END IF;
+END$$
+
+-- Procédure pour obtenir les témoignages de survivants (Scénario 3)
+CREATE PROCEDURE GetSurvivorTestimonies(
+    IN p_user_id INT,
+    IN p_scp_number VARCHAR(20)
+)
+BEGIN
+    DECLARE user_level INT;
+    
+    -- Récupérer le niveau de l''utilisateur
+    SELECT uc.level INTO user_level
+    FROM `User` u
+    JOIN UserClass uc ON u.id_user_class = uc.id_user_class
+    WHERE u.id_user = p_user_id;
+    
+    -- Seuls les utilisateurs de Classe C et plus peuvent consulter les témoignages
+    IF user_level >= 3 THEN
+        SELECT 
+            i.title,
+            i.date,
+            i.description,
+            s.number as scp_number,
+            'TÉMOIGNAGE' as incident_type
+        FROM Incident i
+        JOIN SCP s ON i.id_scp = s.id_scp
+        WHERE s.number = p_scp_number
+          AND (LOWER(i.title) LIKE '%témoignage%' 
+               OR LOWER(i.title) LIKE '%survivant%'
+               OR LOWER(i.description) LIKE '%témoignage%')
+        ORDER BY i.date DESC;
+    ELSE
+        SELECT 'ACCÈS REFUSÉ: Niveau de sécurité insuffisant.' as message;
+    END IF;
+END$$
+
+DELIMITER ;
