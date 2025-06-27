@@ -173,13 +173,14 @@ INSERT INTO SCP (
 
 -- Utilisateurs
 INSERT INTO `User` (first_name, last_name, user_name, email, id_user_class) VALUES
-('Christofeur', 'GERARD', 'Christ0u', 'Christ0u.gerard@foundation.scp', 1), -- Classe D
-('Elliot', 'CARTER', 'ecarter', 'elliot.carter@foundation.scp', 2),         -- Classe E
-('Paul', 'MARTIN', 'pmartin', 'paul.martin@foundation.scp', 3),              -- Classe C
-('Danaé', 'ALBRECHT--MARTIN', 'YumieY0ru', 'YumieY0ru.albrechtmartin@foundation.scp', 4), -- Classe B
-('Michael', 'THOMPSON', 'mthompson', 'michael.thompson@foundation.scp', 3),   -- Classe C (cybersécurité)
-('Dr. James', 'HAYWARD', 'jhayward', 'james.hayward@foundation.scp', 4),     -- Classe B (décédé)
-('Agent Maria', 'RAMIREZ', 'mramirez', 'maria.ramirez@foundation.scp', 3);   -- Classe C (terrain)
+('Christofeur', 'GERARD', 'Christ0u', 'Christ0u.gerard@foundation.scp', 5),                 -- Classe A
+('Elliot', 'CARTER', 'ecarter', 'elliot.carter@foundation.scp', 4),                         -- Classe B
+('Paul', 'MARTIN', 'pmartin', 'paul.martin@foundation.scp', 3),                             -- Classe C
+('Danaé', 'ALBRECHT--MARTIN', 'YumieY0ru', 'YumieY0ru.albrechtmartin@foundation.scp', 2),   -- Classe E
+('Michael', 'THOMPSON', 'mthompson', 'michael.thompson@foundation.scp', 3),                 -- Classe C
+('Dr. James', 'HAYWARD', 'jhayward', 'james.hayward@foundation.scp', 4),                    -- Classe B (décédé)
+('Agent Maria', 'RAMIREZ', 'mramirez', 'maria.ramirez@foundation.scp', 3);                  -- Classe C
+('D-5847', 'ROBINSON', 'd5847', 'd5847@foundation.scp', 1);                                 -- Classe D
 
 -- Incidents
 INSERT INTO Incident (title, date, description, id_scp) VALUES
