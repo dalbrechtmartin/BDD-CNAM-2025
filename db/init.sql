@@ -988,15 +988,15 @@ VALUES
         'GERARD',
         'Christ0u',
         'Christ0u.gerard@foundation.scp',
-        1
-    ), -- Classe D
+        5
+    ), -- Classe A
     (
         'Elliot',
         'CARTER',
         'ecarter',
         'elliot.carter@foundation.scp',
-        2
-    ), -- Classe E
+        4
+    ), -- Classe B
     (
         'Paul',
         'MARTIN',
@@ -1009,11 +1009,38 @@ VALUES
         'ALBRECHT--MARTIN',
         'YumieY0ru',
         'YumieY0ru.albrechtmartin@foundation.scp',
+        2
+    ), -- Classe E
+    (
+        'Michael',
+        'THOMPSON',
+        'mthompson',
+        'michael.thompson@foundation.scp',
+        3
+    ), -- Classe C
+    (
+        'Dr. James',
+        'HAYWARD',
+        'jhayward',
+        'james.hayward@foundation.scp',
         4
-    );
+    ), -- Classe B (décédé)
+    (
+        'Agent Maria',
+        'RAMIREZ',
+        'mramirez',
+        'maria.ramirez@foundation.scp',
+        3
+    ), -- Classe C
+    (
+        'D-5847',
+        'ROBINSON',
+        'd5847',
+        'd5847@foundation.scp',
+        1
+    ); -- Classe D
 
--- Classe B
--- Incidents (id_scp=1 si SCP-173 est le premier SCP inséré)
+-- Incidents
 INSERT INTO
     Incident (title, date, description, id_scp)
 VALUES
@@ -1028,13 +1055,39 @@ VALUES
         '2025-06-23',
         'SCP-173 a manifesté la capacité de se déplacer à travers des surfaces réfléchissantes. Rapport classé "Classe A - Accès restreint".',
         1
+    ),
+    (
+        'Tentative d''accès non autorisé - INCIDENT CRITIQUE',
+        '2025-06-27',
+        'ALERTE SÉCURITÉ : Détection d''une tentative d''accès au dossier SCP-001 par l''utilisateur jhayward (Dr. James Hayward), officiellement décédé il y a 3 ans lors d''un incident de confinement. Origine : Terminal-B7-Site19. Protocole de verrouillage automatique activé. Incident assigné à Michael Thompson (cybersécurité) pour investigation. Équipe de sécurité Classe A déployée.',
+        2
+    ),
+    (
+        'Disparitions inexpliquées - Nevada',
+        '2025-06-26',
+        'Série de disparitions signalées dans une petite ville du Nevada. Les témoins mentionnent un magasin de meubles isolé. Investigation en cours par l''Agent Ramirez.',
+        3
+    ),
+    (
+        'Témoignage de survivant - Évasion SCP-3008',
+        '2024-12-15',
+        'Témoignage de [CENSURÉ] : "J''ai trouvé une zone où les murs semblaient instables, comme s''ils scintillaient. J''ai poussé fort et soudain je me suis retrouvé dehors. Les employés d''IKEA ne m''ont pas suivi." Méthode d''évasion confirmée par 3 autres survivants.',
+        3
+    ),
+    (
+        'Attaque nocturne - Employés hostiles',
+        '2024-08-10',
+        'Témoignage multiple : entités humanoïdes en uniforme IKEA attaquent systématiquement les survivants pendant la nuit. Recommandation : éviter les zones ouvertes après la fermeture des lumières du magasin.',
+        3
     );
 
--- Affectation chercheur -> site (optionnel, id_site=1, id_user=2 pour Elliot Carter)
+-- Affectation chercheur -> site
 INSERT INTO
     Work (id_site, id_user)
 VALUES
-    (1, 2);
+    (1, 2), -- Elliot Carter au Site-19
+    (1, 5), -- Michael Thompson au Site-19
+    (1, 7); -- Agent Ramirez au Site-19
 
 -- Access
 INSERT INTO
@@ -1069,7 +1122,7 @@ CREATE PROCEDURE GetSCPIncidentsIfClassA(
 )
 BEGIN
     DECLARE user_level INT;
-    -- Récupérer le niveau de classe de l'utilisateur
+    -- Récupérer le niveau de classe de l''utilisateur
     SELECT uc.level INTO user_level
     FROM `User` u
     JOIN UserClass uc ON u.id_user_class = uc.id_user_class
@@ -1081,8 +1134,104 @@ BEGIN
         JOIN SCP scp ON i.id_scp = scp.id_scp
         WHERE scp.number = p_scp_number;
     ELSE
-        -- Message d'alerte si l'utilisateur n'est pas Classe A
+        -- Message d''alerte si l''utilisateur n''est pas Classe A
         SELECT 'Alerte : ce fichier dépasse votre niveau. Demandez une autorisation temporaire.' AS message;
+    END IF;
+END$$
+-- Procédure pour analyser les accès suspects (Scénario 2)
+CREATE PROCEDURE GetSuspiciousAccess(
+    IN p_user_id INT
+)
+BEGIN
+    DECLARE user_level INT;
+    -- Récupérer le niveau de l''utilisateur
+    SELECT uc.level INTO user_level
+    FROM `User` u
+    JOIN UserClass uc ON u.id_user_class = uc.id_user_class
+    WHERE u.id_user = p_user_id;
+    -- Seuls les utilisateurs de Classe C et plus peuvent consulter les accès suspects
+    IF user_level >= 3 THEN
+        SELECT 
+            a.date_access,
+            u.user_name,
+            CONCAT(u.first_name, ' ', u.last_name) as full_name,
+            s.number as scp_number,
+            s.title as scp_title,
+            uc.description as user_class,
+            'ACCÈS SUSPECT' as alert_type
+        FROM Access a
+        JOIN `User` u ON a.id_user = u.id_user
+        JOIN SCP s ON a.id_scp = s.id_scp
+        JOIN UserClass uc ON u.id_user_class = uc.id_user_class
+        WHERE s.number = 'SCP-001'
+        ORDER BY a.date_access DESC;
+    ELSE
+        SELECT 'ACCÈS REFUSÉ: Niveau de sécurité insuffisant.' as message;
+    END IF;
+END$$
+-- Procédure de recherche par mots-clés (Scénario 3)
+CREATE PROCEDURE SearchSCPByKeywords(
+    IN p_user_id INT,
+    IN p_keywords VARCHAR(255)
+)
+BEGIN
+    DECLARE user_level INT;
+    -- Récupérer le niveau de l''utilisateur
+    SELECT uc.level INTO user_level
+    FROM `User` u
+    JOIN UserClass uc ON u.id_user_class = uc.id_user_class
+    WHERE u.id_user = p_user_id;
+    -- Seuls les utilisateurs de Classe C et plus peuvent faire des recherches
+    IF user_level >= 3 THEN
+        SELECT 
+            s.number,
+            s.title,
+            s.description,
+            sc.name as scp_class,
+            scl.color as classification,
+            s.threat_level,
+            s.nationality,
+            'CORRESPONDANCE TROUVÉE' as search_result
+        FROM SCP s
+        JOIN SCPClass sc ON s.id_scp_class = sc.id_scp_class
+        JOIN SCPClassification scl ON s.id_scp_classification = scl.id_scp_classification
+        WHERE LOWER(s.description) LIKE CONCAT('%', LOWER(p_keywords), '%')
+           OR LOWER(s.title) LIKE CONCAT('%', LOWER(p_keywords), '%')
+           OR LOWER(s.nationality) LIKE CONCAT('%', LOWER(p_keywords), '%')
+        ORDER BY s.threat_level DESC, s.number;
+    ELSE
+        SELECT 'ACCÈS REFUSÉ: Niveau de sécurité insuffisant pour effectuer des recherches.' as message;
+    END IF;
+END$$
+-- Procédure pour obtenir les témoignages de survivants (Scénario 3)
+CREATE PROCEDURE GetSurvivorTestimonies(
+    IN p_user_id INT,
+    IN p_scp_number VARCHAR(20)
+)
+BEGIN
+    DECLARE user_level INT;
+    -- Récupérer le niveau de l''utilisateur
+    SELECT uc.level INTO user_level
+    FROM `User` u
+    JOIN UserClass uc ON u.id_user_class = uc.id_user_class
+    WHERE u.id_user = p_user_id;
+    -- Seuls les utilisateurs de Classe C et plus peuvent consulter les témoignages
+    IF user_level >= 3 THEN
+        SELECT 
+            i.title,
+            i.date,
+            i.description,
+            s.number as scp_number,
+            'TÉMOIGNAGE' as incident_type
+        FROM Incident i
+        JOIN SCP s ON i.id_scp = s.id_scp
+        WHERE s.number = p_scp_number
+          AND (LOWER(i.title) LIKE '%témoignage%' 
+               OR LOWER(i.title) LIKE '%survivant%'
+               OR LOWER(i.description) LIKE '%témoignage%')
+        ORDER BY i.date DESC;
+    ELSE
+        SELECT 'ACCÈS REFUSÉ: Niveau de sécurité insuffisant.' as message;
     END IF;
 END$$
 DELIMITER ;
