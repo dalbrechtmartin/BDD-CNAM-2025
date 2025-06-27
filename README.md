@@ -103,7 +103,7 @@ SELECT * FROM SCP;
 ### 2. **Trouver les incidents liés à un SCP spécifique**
 
 ```sql
-SELECT * FROM Incident WHERE id_scpFK = 1;
+SELECT * FROM Incident WHERE id_scp = 1;
 ```
 
 ### 3. **Lister tous les utilisateurs avec leur classe d'utilisateur**
@@ -111,7 +111,7 @@ SELECT * FROM Incident WHERE id_scpFK = 1;
 ```sql
 SELECT u.first_name, u.last_name, uc.level
 FROM `User` u
-JOIN UserClass uc ON u.id_user_classFK = uc.id_user_class;
+JOIN UserClass uc ON u.id_user_class = uc.id_user_class;
 ```
 
 ### 4. **Lister tous les accès d'un utilisateur à un SCP**
@@ -119,8 +119,34 @@ JOIN UserClass uc ON u.id_user_classFK = uc.id_user_class;
 ```sql
 SELECT a.date_access, s.number, s.title
 FROM Access a
-JOIN SCP s ON a.id_scpFK = s.id_scp
-WHERE a.id_userFK = 1;
+JOIN SCP s ON a.id_scp = s.id_scp
+WHERE a.id_user = 1;
+```
+
+### 5. **Consulter les accès suspects pour détecter des activités anormales**
+
+```sql
+SELECT
+    a.date_access,
+    CONCAT(u.first_name, ' ', u.last_name) as user_name,
+    s.number as scp_accessed,
+    uc.description as user_class
+FROM Access a
+JOIN `User` u ON a.id_user = u.id_user
+JOIN SCP s ON a.id_scp = s.id_scp
+JOIN UserClass uc ON u.id_user_class = uc.id_user_class
+WHERE s.number = 'SCP-001'
+ORDER BY a.date_access DESC;
+```
+
+### 6. **Vérifier les incidents de sécurité récents**
+
+```sql
+SELECT i.title, i.date, i.description, s.number as scp_number
+FROM Incident i
+JOIN SCP s ON i.id_scp = s.id_scp
+WHERE i.title LIKE '%accès non autorisé%' OR i.title LIKE '%CRITIQUE%'
+ORDER BY i.date DESC;
 ```
 
 ---
@@ -134,7 +160,7 @@ Voici quelques scénarios plus concrets pour l'utilisation de la base `scp_db` :
 **Contexte :**  
 Un chercheur (Dr. Carter, Classe B) souhaite consulter les incidents liés à un SCP (ex : SCP-173).  
 Grâce au moteur de recherche, il filtre les rapports selon la classification du personnel.  
-Si un incident est classé au-dessus de son niveau (Classe A), il reçoit une alerte :
+Si un incident est classé au-dessus de son niveau (Classe A), il reçoit une alerte :
 
 > "Alerte : ce fichier dépasse votre niveau. Demandez une autorisation temporaire."
 
@@ -166,6 +192,82 @@ Pour connaître les IDs disponibles :
 ```sql
 SELECT id_user, first_name, id_user_class FROM `User`;
 ```
+
+---
+
+### 🚨 **Scénario 2 – Tentative d'intrusion dans la base de données**
+
+**Contexte :**  
+Michael Thompson, technicien en cybersécurité de Classe C, reçoit une alerte urgente : une activité suspecte a été détectée sur la base de données SCP.
+
+🚨 **"Tentative d'accès non autorisé détectée. Fichier ciblé : SCP-001. Source : inconnue."**
+
+Michael consulte les logs de connexion et remarque quelque chose d'étrange : la tentative ne vient pas d'un hacker extérieur, mais d'un terminal situé à l'intérieur du Site-19. Encore plus troublant, l'utilisateur semble être le Dr. Hayward, un chercheur de Classe B supposé être décédé il y a trois ans lors d'un incident de confinement.
+
+Le système de sécurité enclenche immédiatement un protocole de verrouillage, empêchant toute autre tentative d'accès. Michael déclenche une procédure d'alerte et une équipe de sécurité de Classe A est envoyée pour identifier l'origine de cette activité... et découvrir si le Dr. Hayward est vraiment mort.
+
+---
+
+### ⚙️ **Utiliser les procédures stockées du scénario 2**
+
+Le scénario 2 utilise les tables existantes pour gérer les tentatives d'accès suspectes et les incidents de sécurité.
+
+#### **Analyser les accès suspects**
+
+La procédure `GetSuspiciousAccess` permet aux utilisateurs de Classe C et plus de consulter les tentatives d'accès à SCP-001 :
+
+```sql
+-- Voir les accès suspects à SCP-001 (Michael Thompson, id_user = 5)
+CALL GetSuspiciousAccess(5);
+```
+
+#### **Consulter les incidents de sécurité**
+
+Pour voir l'incident critique lié à la tentative d'intrusion :
+
+```sql
+-- Voir tous les incidents liés à SCP-001
+SELECT i.title, i.date, i.description, s.number as scp_number
+FROM Incident i
+JOIN SCP s ON i.id_scp = s.id_scp
+WHERE s.number = 'SCP-001';
+```
+
+**Exemple de scénario complet :**
+
+1. Michael reçoit une alerte et consulte les accès suspects :
+
+   ```sql
+   CALL GetSuspiciousAccess(5);
+   ```
+
+2. Il vérifie les incidents récents liés à SCP-001 :
+
+   ```sql
+   SELECT * FROM Incident WHERE id_scp = 2 ORDER BY date DESC;
+   ```
+
+3. Il peut aussi vérifier l'existence du Dr. Hayward dans la base :
+
+   ```sql
+   SELECT id_user, first_name, last_name, user_name, id_user_class
+   FROM `User`
+   WHERE user_name = 'jhayward';
+   ```
+
+4. Il consulte tous les accès à SCP-001 pour analyser le pattern :
+
+   ```sql
+   SELECT
+      a.date_access,
+      CONCAT(u.first_name, ' ', u.last_name) as user_name,
+      s.number as scp_accessed
+   FROM Access a
+   JOIN `User` u ON a.id_user = u.id_user
+   JOIN SCP s ON a.id_scp = s.id_scp
+   WHERE s.number = 'SCP-001'
+   ORDER BY a.date_access DESC;
+   ```
 
 ---
 
