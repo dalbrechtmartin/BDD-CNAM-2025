@@ -1135,6 +1135,7 @@ BEGIN
         WHERE scp.number = p_scp_number;
     ELSE
         -- Message d''alerte si l''utilisateur n''est pas Classe A
+        -- Message d''alerte si l''utilisateur n''est pas Classe A
         SELECT 'Alerte : ce fichier dépasse votre niveau. Demandez une autorisation temporaire.' AS message;
     END IF;
 END$$
