@@ -4,10 +4,38 @@
 
 Ce projet utilise **Docker** pour déployer une base de données **MySQL** qui contient des informations sur les SCPs, les utilisateurs, les incidents, etc. Ce guide explique comment démarrer le conteneur MySQL et interagir avec la base de données en utilisant différents outils et méthodes.
 
+### 📊 **Schéma de la base de données**
+
+Voici le schéma complet de la base de données `scp_db` montrant les relations entre les tables :
+
+![Schéma de la base de données](img/schema.png)
+
+La base de données est organisée autour des entités principales :
+
+- **SCP** : Les objets anormaux avec leurs classifications et sites de confinement
+- **User** : Le personnel de la Fondation avec leurs niveaux d'autorisation
+- **Incident** : Les événements liés aux SCPs
+- **Access** : Les logs d'accès aux dossiers SCP
+- **Work** : Les affectations du personnel aux sites
+
 ## 🛠️ **Prérequis**
 
 - **Docker** installé sur votre machine
 - **docker-compose** installé (si nécessaire)
+
+## 📁 **Structure du projet**
+
+```
+BDD-CNAM-2025/
+├── Cahier_des_charges_Projet_libre.pdf  # Cahier des charges du projet
+├── docker-compose.yml                   # Configuration Docker
+├── README.md                            # Guide d'utilisation
+├── db/
+│   └── init.sql                         # Script d'initialisation de la base
+└── img/
+    ├── schema.png                       # Schéma de la base de données
+    └── ...                              # Autres images
+```
 
 ---
 
@@ -100,6 +128,10 @@ Voici quelques exemples de requêtes SQL que vous pouvez exécuter sur la base `
 SELECT * FROM SCP;
 ```
 
+![Résultat de la requête SELECT * FROM SCP](img/scps.png)
+
+Cette requête affiche tous les SCPs de la base de données avec leurs informations complètes : numéro, titre, description, classe, classification et site de confinement.
+
 ### 2. **Trouver les incidents liés à un SCP spécifique**
 
 ```sql
@@ -146,6 +178,26 @@ SELECT i.title, i.date, i.description, s.number as scp_number
 FROM Incident i
 JOIN SCP s ON i.id_scp = s.id_scp
 WHERE i.title LIKE '%accès non autorisé%' OR i.title LIKE '%CRITIQUE%'
+ORDER BY i.date DESC;
+```
+
+### 7. **Rechercher des SCPs par localisation géographique**
+
+```sql
+SELECT number, title, nationality, threat_level, description
+FROM SCP
+WHERE nationality LIKE '%Nevada%' OR nationality LIKE '%USA%'
+ORDER BY threat_level DESC;
+```
+
+### 8. **Consulter les témoignages de survivants pour un SCP spécifique**
+
+```sql
+SELECT i.title, i.date, i.description
+FROM Incident i
+JOIN SCP s ON i.id_scp = s.id_scp
+WHERE s.number = 'SCP-3008'
+  AND (i.title LIKE '%témoignage%' OR i.title LIKE '%survivant%')
 ORDER BY i.date DESC;
 ```
 
@@ -208,65 +260,81 @@ Le système de sécurité enclenche immédiatement un protocole de verrouillage,
 
 ---
 
-### ⚙️ **Utiliser les procédures stockées du scénario 2**
+### 🔍 **Scénario 3 – Agent de terrain utilisant la base pour survivre**
 
-Le scénario 2 utilise les tables existantes pour gérer les tentatives d'accès suspectes et les incidents de sécurité.
+**Contexte :**  
+L'Agent Ramirez, membre du personnel de Classe C, est envoyé en mission sur le terrain pour enquêter sur une série de disparitions inexpliquées dans une petite ville du Nevada. Les habitants parlent d'un étrange phénomène touchant certains voyageurs qui s'arrêtent dans un magasin de meubles isolé.
 
-#### **Analyser les accès suspects**
+Avant d'entrer dans le magasin, Ramirez consulte la base de données via son terminal sécurisé. Il entre les mots-clés :
 
-La procédure `GetSuspiciousAccess` permet aux utilisateurs de Classe C et plus de consulter les tentatives d'accès à SCP-001 :
+🔎 **"magasin de meubles"**
+
+Un résultat remonte immédiatement : **SCP-3008 "L'IKEA Infini"**
+
+- **Classe** : Euclide
+- **Effet principal** : Toute personne entrant dans SCP-3008 devient incapable d'en ressortir. L'intérieur s'étend apparemment à l'infini.
+- **Menace secondaire** : Entités humanoïdes hostiles ("employés d'IKEA") qui attaquent pendant la nuit.
+
+Grâce à la base de données, Ramirez consulte les témoignages de survivants et découvre qu'une seule méthode d'évasion a fonctionné : certains ont trouvé des zones où la structure semblait instable, permettant parfois une sortie.
+
+Ramirez fait demi-tour et contacte la Fondation. Une équipe de récupération est envoyée pour contenir le phénomène.
+
+---
+
+### ⚙️ **Utiliser les procédures stockées du scénario 3**
+
+Le scénario 3 permet aux agents de terrain d'effectuer des recherches par mots-clés et de consulter les témoignages de survivants.
+
+#### **Recherche par mots-clés**
+
+La procédure `SearchSCPByKeywords` permet aux utilisateurs de Classe C et plus de rechercher des SCPs par mots-clés :
 
 ```sql
--- Voir les accès suspects à SCP-001 (Michael Thompson, id_user = 5)
-CALL GetSuspiciousAccess(5);
+-- Recherche par mots-clés (Agent Ramirez, id_user = 7)
+CALL SearchSCPByKeywords(7, 'magasin de meubles');
+CALL SearchSCPByKeywords(7, 'disparition');
+CALL SearchSCPByKeywords(7, 'infini');
 ```
 
-#### **Consulter les incidents de sécurité**
+#### **Consulter les témoignages de survivants**
 
-Pour voir l'incident critique lié à la tentative d'intrusion :
+La procédure `GetSurvivorTestimonies` affiche les témoignages et méthodes d'évasion documentées :
 
 ```sql
--- Voir tous les incidents liés à SCP-001
-SELECT i.title, i.date, i.description, s.number as scp_number
-FROM Incident i
-JOIN SCP s ON i.id_scp = s.id_scp
-WHERE s.number = 'SCP-001';
+-- Voir les témoignages pour SCP-3008
+CALL GetSurvivorTestimonies(7, 'SCP-3008');
 ```
 
 **Exemple de scénario complet :**
 
-1. Michael reçoit une alerte et consulte les accès suspects :
+1. L'Agent Ramirez effectue une recherche par mots-clés :
 
    ```sql
-   CALL GetSuspiciousAccess(5);
+   CALL SearchSCPByKeywords(7, 'magasin de meubles');
    ```
 
-2. Il vérifie les incidents récents liés à SCP-001 :
+2. Il consulte les témoignages de survivants pour SCP-3008 :
 
    ```sql
-   SELECT * FROM Incident WHERE id_scp = 2 ORDER BY date DESC;
+   CALL GetSurvivorTestimonies(7, 'SCP-3008');
    ```
 
-3. Il peut aussi vérifier l'existence du Dr. Hayward dans la base :
+3. Il peut aussi vérifier tous les incidents récents liés à SCP-3008 :
 
    ```sql
-   SELECT id_user, first_name, last_name, user_name, id_user_class
-   FROM `User`
-   WHERE user_name = 'jhayward';
+   SELECT i.title, i.date, i.description
+   FROM Incident i
+   JOIN SCP s ON i.id_scp = s.id_scp
+   WHERE s.number = 'SCP-3008'
+   ORDER BY i.date DESC;
    ```
 
-4. Il consulte tous les accès à SCP-001 pour analyser le pattern :
-
+4. Recherche géographique pour localiser les zones à risque :
    ```sql
-   SELECT
-      a.date_access,
-      CONCAT(u.first_name, ' ', u.last_name) as user_name,
-      s.number as scp_accessed
-   FROM Access a
-   JOIN `User` u ON a.id_user = u.id_user
-   JOIN SCP s ON a.id_scp = s.id_scp
-   WHERE s.number = 'SCP-001'
-   ORDER BY a.date_access DESC;
+   SELECT number, title, nationality, threat_level
+   FROM SCP
+   WHERE nationality LIKE '%Nevada%' OR nationality LIKE '%USA%'
+   ORDER BY threat_level DESC;
    ```
 
 ---
